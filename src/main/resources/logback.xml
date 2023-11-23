@@ -1,0 +1,19 @@
+<configuration>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">-
+        <!--    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/%d{yyyy-MM-dd}-applog.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <root level="ERROR">
+        <appender-ref ref="console"/>
+    </root>
+
+    <!--    <root level="ERROR">-->
+    <!--        <appender-ref ref="rollingFile"/>-->
+    <!--    </root>-->
+</configuration>
