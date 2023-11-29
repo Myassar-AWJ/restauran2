@@ -25,6 +25,15 @@ public class Restaurant {
     @NotBlank(message = "Address is required")
     private String address;
 
+    public Restaurant(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public Restaurant() {
+
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "menu_id")
     private Menu menu;
