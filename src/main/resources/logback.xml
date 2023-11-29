@@ -1,5 +1,6 @@
 <configuration>
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">-
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <!--    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -8,8 +9,9 @@
             <fileNamePattern>./logs/%d{yyyy-MM-dd}-applog.log</fileNamePattern>
         </rollingPolicy>
     </appender>
-
-    <root level="ERROR">
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+    <root level="TRACE">
         <appender-ref ref="console"/>
     </root>
 

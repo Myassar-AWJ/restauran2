@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Layout page</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<!--<header>-->
+<!--    <h1>My website</h1>-->
+<!--</header>-->
+<!-- Display flash message if it exists -->
+<div th:if="${errorMessage}" class="alert alert-danger">
+    <p th:text="${errorMessage}">Error message goes here</p>
+</div>
+
+<section layout:fragment="content">
+    <p>Page content goes here</p>
+</section>
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+ </body>
+</html>

@@ -32,11 +32,21 @@ public class SecurityConfig {
 //        return http.build();
 //    }
     @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests((authz) -> authz
+//
+//                        .anyRequest().permitAll()) // Allow all requests
+//                .csrf(csrf -> csrf.disable()); // Disable CSRF protection
+//
+//        return http.build();
+//    }
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
                         .anyRequest().permitAll()) // Allow all requests
-                .csrf(csrf -> csrf.disable()); // Disable CSRF protection
+                .csrf().disable() // Disable CSRF protection
+                .headers().frameOptions().disable(); // Disable frame options for H2 console
 
         return http.build();
     }

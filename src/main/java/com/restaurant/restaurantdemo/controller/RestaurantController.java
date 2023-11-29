@@ -98,6 +98,20 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+    @PutMapping("/{RestaurantId}/menu/{MenuId}")
+    public ResponseEntity<ResponseWithData<Restaurant>> linkRestaurantToMenu(@PathVariable Long RestaurantId,@PathVariable Long MenuId) {
+        try{
+            var restaurant= restaurantService.linkRestaurantToMenu(RestaurantId,MenuId);
+            ResponseWithData<Restaurant> response = new ResponseWithData<>("Success", restaurant);
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            // Log the exception
+            logger.error("Error while updating restaurant in cont", e.getMessage());
+            ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
 
     @DeleteMapping("/{RestaurantId}")
     public ResponseEntity<ResponseWithData<Void>> deleteRestaurant(@PathVariable Long RestaurantId) {
