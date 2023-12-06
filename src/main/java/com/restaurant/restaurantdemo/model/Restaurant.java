@@ -3,14 +3,18 @@ package com.restaurant.restaurantdemo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Restaurant {
     @Id
@@ -25,14 +29,7 @@ public class Restaurant {
     @NotBlank(message = "Address is required")
     private String address;
 
-    public Restaurant(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
 
-    public Restaurant() {
-
-    }
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "menu_id")

@@ -3,10 +3,11 @@ package com.restaurant.restaurantdemo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
+import javax.management.ConstructorParameters;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,20 +15,19 @@ import java.util.Set;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Menu {
-    public Menu(String name) {
-        this.name = name;
-    }
 
-    public Menu() {
-        // Default constructor
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private  Long id;
+
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Column(unique = true)
     private  String name;
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = {

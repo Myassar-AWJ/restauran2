@@ -9,6 +9,7 @@ import com.restaurant.restaurantdemo.repository.MenuRepository;
 
 import com.restaurant.restaurantdemo.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,16 @@ import java.util.Set;
 public class MenuService {
 
     private final MenuRepository menuRepository;
+    private final ProductRepository productRepository;
     private final ProductService productService;
     private final LoggerService logger;
 
     @Autowired
-    public MenuService(MenuRepository menuRepository, LoggerService logger, ProductService productService) {
+    public MenuService(MenuRepository menuRepository, LoggerService logger, ProductService productService ,ProductRepository productRepository) {
         this.menuRepository = menuRepository;
         this.logger = logger;
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     public List<Menu> getAllMenus() {
@@ -81,6 +84,7 @@ public class MenuService {
         }
     }
 
+    @Transactional
     public Menu linkItemsWithMenu(Long menuId, List<Long> productsId) {
         try {
             Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new EntityNotFoundException("Menu not found"));
@@ -96,6 +100,25 @@ public class MenuService {
             throw new RuntimeException("Error While Link Items to Menu");
         }
     }
+
+    @Transactional
+    public Menu unlinkItemsWithMenu(Long menuId, List<Long> productsId) {
+        try {
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new EntityNotFoundException("Menu not found with id " + menuId));
+
+            for (Long id : productsId) {
+                Product product = productService.getProductById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                menu.getProducts().remove(product);
+            }
+
+            return  menuRepository.save(menu);
+        } catch (Exception e) {
+            logger.error("Error While Unlink Items to Menu", e.getMessage());
+            throw new RuntimeException("Error While Unlink Items to Menu");
+        }
+    }
+
 
 
 }

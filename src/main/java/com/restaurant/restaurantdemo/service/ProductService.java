@@ -18,9 +18,9 @@ public class ProductService {
     private final LoggerService logger;
 
     @Autowired
-    public ProductService(ProductRepository productRepository,LoggerService logger) {
+    public ProductService(ProductRepository productRepository, LoggerService logger) {
         this.productRepository = productRepository;
-        this.logger=logger;
+        this.logger = logger;
     }
 
 
@@ -34,9 +34,25 @@ public class ProductService {
         }
     }
 
-//    public List<Product> getAllProductsByMenuId(Long menu_id) {
-//        return productRepository.findAll();
-//    }
+    public List<Product> getProductsContainingName(String name) {
+        try {
+            return productRepository.findByNameContaining(name);
+        } catch (Exception e) {
+            // Log the exception
+            logger.error("Error while retrieving products containing name", e.getMessage());
+            throw new RuntimeException("Error while retrieving products containing name", e);
+        }
+    }
+
+    public Optional<Product> getProductByName(String name) {
+        try {
+            return Optional.ofNullable(productRepository.findByName(name));
+        } catch (Exception e) {
+            // Log the exception
+            logger.error("Error while retrieving product by name", e.getMessage());
+            throw new RuntimeException("Error while retrieving product by id", e);
+        }
+    }
 
     public Optional<Product> getProductById(Long id) {
         try {
@@ -50,11 +66,6 @@ public class ProductService {
 
     public Product createProduct(Product product) {
         try {
-//            Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new EntityNotFoundException("Menu not found"));
-//            Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Product not found"));
-//
-//            menu.getProducts().add(product);
-//            menuRepository.save(menu);
             return productRepository.save(product);
         } catch (Exception e) {
             // Log the exception
@@ -63,16 +74,16 @@ public class ProductService {
         }
     }
 
-    public Product updateProduct(Long id,Product product){
-        try{
-            var oldProduct=productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Product Not Found"));
+    public Product updateProduct(Long id, Product product) {
+        try {
+            var oldProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product Not Found"));
             oldProduct.setDescription(product.getDescription());
             oldProduct.setPlu(product.getPlu());
             oldProduct.setName(product.getName());
             oldProduct.setPrice(product.getPrice());
             oldProduct.setImage(product.getImage());
             return productRepository.save(oldProduct);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error while updating product", e.getMessage());
             throw new RuntimeException("Error while updating product", e);
         }
