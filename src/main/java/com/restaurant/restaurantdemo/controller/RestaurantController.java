@@ -74,17 +74,16 @@ public class RestaurantController {
     //    @PostMapping
     @PostMapping()
     public ResponseEntity<ResponseWithData<Restaurant>> createRestaurant(@RequestBody @Valid  Restaurant restaurant , BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            // Collect error messages and return as a response
-            List<String> errors = bindingResult.getFieldErrors().stream()
-                    .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                    .collect(Collectors.toList());
-
-            ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>("Failed", errors);
-            return ResponseEntity.badRequest().body(errorResponse);
-        }
         try {
+            if (bindingResult.hasErrors()) {
+                // Collect error messages and return as a response
+                List<String> errors = bindingResult.getFieldErrors().stream()
+                        .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                        .collect(Collectors.toList());
 
+                ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>("Failed", errors);
+                return ResponseEntity.badRequest().body(errorResponse);
+            }
             var newRestaurant= restaurantService.createRestaurant(restaurant);
             ResponseWithData<Restaurant> response = new ResponseWithData<>("Success", newRestaurant);
             return ResponseEntity.ok(response);

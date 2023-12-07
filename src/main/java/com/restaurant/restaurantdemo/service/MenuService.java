@@ -56,6 +56,9 @@ public class MenuService {
 
     public Menu createMenu(Menu menu) {
         try {
+            if (menuRepository.findByName(menu.getName()) != null) {
+                throw new IllegalStateException("A Menu with the name '" + menu.getName() + "' already exists.");
+            }
             return menuRepository.save(menu);
         } catch (Exception e) {
             logger.error("Error while creating menu", e.getMessage());
@@ -65,6 +68,9 @@ public class MenuService {
 
     public Menu updateMEnu(Long id, Menu menu) {
         try {
+            if (menuRepository.findByNameAndIdNot(menu.getName(),id) != null) {
+                throw new IllegalStateException("A Menu with the name '" + menu.getName() + "' already exists.");
+            }
             Menu oldMenu = menuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Menu Not Found"));
             oldMenu.setName(menu.getName());
             return menuRepository.save(oldMenu);

@@ -52,18 +52,25 @@ public class RestaurantService {
         }
     }
 
-    public Restaurant createRestaurant(Restaurant Restaurant) {
+    public Restaurant createRestaurant(Restaurant restaurant) {
         try {
-            return restaurantRepository.save(Restaurant);
+            if (restaurantRepository.findByName(restaurant.getName()) != null) {
+                throw new IllegalStateException("A restaurant with the name '" + restaurant.getName() + "' already exists.");
+            }
+            return restaurantRepository.save(restaurant);
         } catch (Exception e) {
             // Log the exception
             logger.error("Error while creating restaurant", e);
-            throw new RuntimeException("Error while creating  restaurant", e.getCause());
+            throw new RuntimeException("Error while creating  restaurant ," + e.getMessage(), e.getCause());
         }
     }
 
     public Restaurant updateRestaurant(Long restaurantId, Restaurant restaurantDetails) {
         try {
+
+            if (restaurantRepository.findByNameAndIdNot(restaurantDetails.getName(), restaurantId) != null) {
+                throw new IllegalStateException("A restaurant with the name '" + restaurantDetails.getName() + "' already exists.");
+            }
             Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
                     .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
 
@@ -96,7 +103,6 @@ public class RestaurantService {
             throw new RuntimeException("Error while updating restaurant", e.getCause());
         }
     }
-
 
 
     @Transactional

@@ -10,4 +10,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant,Long> {
     List<Restaurant> findByNameContaining(String name);
     List<Restaurant> findByAddressContaining(String Address);
     Restaurant findByName(String name);
+    Restaurant findByNameAndIdNot(String name, Long id);
+
+
 }
