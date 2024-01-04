@@ -2,11 +2,13 @@ package com.restaurant.restaurantdemo.boundary.input.controller.restaurant;
 
 import com.restaurant.restaurantdemo.application.service.ResponseWithData;
 import com.restaurant.restaurantdemo.application.service.LoggerService;
+import groovy.util.logging.Slf4j;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 
 import com.restaurant.restaurantdemo.domain.restaurant.Restaurant;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -17,18 +19,19 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/api/restaurants")
+//@Slf4j
+@RestController("/api/restaurants")
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    private final LoggerService logger;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService,LoggerService logger) {
+    public RestaurantController(RestaurantService restaurantService ) {
         this.restaurantService = restaurantService;
-        this.logger=logger;
+
     }
 
     @GetMapping
@@ -41,7 +44,7 @@ public class RestaurantController {
 
         } catch (Exception e) {
             // Log the exception for debugging purposes
-            logger.error("An error occurred while processing the request", e.getMessage());
+
             ResponseWithData<List<Restaurant>> errorResponse = new ResponseWithData<>(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 
@@ -59,7 +62,7 @@ public class RestaurantController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             // Handle the specific exception for "Restaurant not found"
-            logger.error("Restaurant not found", e.getMessage());
+
             ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>("Restaurant not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
@@ -84,7 +87,7 @@ public class RestaurantController {
 
         } catch (Exception e) {
             // Log the exception
-            logger.error("Error while  creating new restaurant in cont", e.getMessage());
+
             ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 
@@ -100,7 +103,7 @@ public class RestaurantController {
             return ResponseEntity.ok(response);
         }catch (Exception e){
             // Log the exception
-            logger.error("Error while updating restaurant in cont", e.getMessage());
+
             ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
@@ -113,7 +116,7 @@ public class RestaurantController {
             return ResponseEntity.ok(response);
         }catch (Exception e){
             // Log the exception
-            logger.error("Error while updating restaurant in cont", e.getMessage());
+
             ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
@@ -127,7 +130,7 @@ public class RestaurantController {
             return ResponseEntity.ok(response);
         }catch (Exception e){
             // Log the exception
-            logger.error("Error while updating restaurant in cont", e.getMessage());
+
             ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
@@ -141,7 +144,7 @@ public class RestaurantController {
             ResponseWithData<Void> response = new ResponseWithData<>("Success");
             return ResponseEntity.ok(response);
         }catch (Exception e){
-            logger.error("Error while  deleting a  restaurant in cont", e.getMessage());
+
             ResponseWithData<Void> errorResponse = new ResponseWithData<>(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
