@@ -40,15 +40,10 @@ public class RestaurantService {
 
     }
 
-    public Optional<Restaurant> getRestaurantById(Long RestaurantId) {
-        try {
-            return restaurantRepository.findById(RestaurantId);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while retrieving restaurant by id", e.getMessage());
-            throw new RuntimeException("Error while retrieving  restaurant by id", e);
-        }
+    public Restaurant getRestaurantById(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId).orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
     }
+
 
     public Restaurant createRestaurant(Restaurant restaurant) {
         try {

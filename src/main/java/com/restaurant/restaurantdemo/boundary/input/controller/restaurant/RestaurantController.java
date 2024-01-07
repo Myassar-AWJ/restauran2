@@ -43,69 +43,47 @@ public class RestaurantController {
     }
 
 
-    @GetMapping("/{RestaurantId}")
-    public RestaurantDTO getRestaurantById(@PathVariable Long RestaurantId) {
+    @GetMapping("/{restaurantId}")
+    public RestaurantDTO getRestaurantById(@PathVariable Long restaurantId) {
 
-        var restaurant = restaurantService.getRestaurantById(RestaurantId)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found")); // Customize the exception type
+        var restaurant = restaurantService.getRestaurantById(restaurantId);
         return modelMapper.map(restaurant, RestaurantDTO.class);
 
 
     }
 
-    //    @PostMapping
+    //    @PostMapping , BindingResult bindingResult
     @PostMapping()
-    public RestaurantDTO createRestaurant(@RequestBody @Valid RestaurantDTO restaurantDto, BindingResult bindingResult) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Long> createRestaurant(@RequestBody @Valid RestaurantDTO restaurantDto) {
 
         Restaurant restaurant = modelMapper.map(restaurantDto, Restaurant.class);
         Restaurant newRestaurant = restaurantService.createRestaurant(restaurant);
-        return modelMapper.map(newRestaurant, RestaurantDTO.class);
+        return ResponseEntity.ok(newRestaurant.getId());
 
     }
-//    @PostMapping()
-//    public ResponseEntity<?> createRestaurant(@RequestBody @Valid RestaurantDTO restaurantDto, BindingResult bindingResult) {
-////        if (bindingResult.hasErrors()) {
-////            List<String> errors = bindingResult.getFieldErrors().stream()
-////                    .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-////                    .collect(Collectors.toList());
-////            return ResponseEntity.badRequest().body(new ResponseWithData<>("Failed", errors));
-////        }
-//        Restaurant newRestaurant = restaurantService.createRestaurant(modelMapper.map(restaurantDto, Restaurant.class));
-//        return ResponseEntity.ok(modelMapper.map(newRestaurant, RestaurantDTO.class));
-//    }
 
-    @PutMapping("/{RestaurantId}")
-    public ResponseEntity<ResponseWithData<Restaurant>> updateRestaurant(@PathVariable Long RestaurantId, @RequestBody @Valid Restaurant RestaurantDetails) {
-        try {
-            var restaurant = restaurantService.updateRestaurant(RestaurantId, RestaurantDetails);
-            ResponseWithData<Restaurant> response = new ResponseWithData<>("Success", restaurant);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // Log the exception
 
-            ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @PutMapping("/{restaurantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void  updateRestaurant(@PathVariable Long restaurantId, @RequestBody @Valid RestaurantDTO restaurantDto) {
+        Restaurant restaurant = modelMapper.map(restaurantDto, Restaurant.class);
+        Restaurant updatedrestaurant = restaurantService.updateRestaurant(restaurantId, restaurant);
     }
 
-    @PutMapping("/{RestaurantId}/menu/{MenuId}")
-    public ResponseEntity<ResponseWithData<Restaurant>> linkRestaurantToMenu(@PathVariable Long RestaurantId, @PathVariable Long MenuId) {
-        try {
-            var restaurant = restaurantService.linkRestaurantToMenu(RestaurantId, MenuId);
-            ResponseWithData<Restaurant> response = new ResponseWithData<>("Success", restaurant);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // Log the exception
+    @PutMapping("/{restaurantId}/menu/{menuId}")
+    public ResponseEntity<RestaurantDTO> linkRestaurantToMenu(@PathVariable Long restaurantId, @PathVariable Long menuId) {
 
-            ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+        var restaurant = restaurantService.linkRestaurantToMenu(restaurantId, menuId);
+        RestaurantDTO restaurantDto = modelMapper.map(restaurant, RestaurantDTO.class);
+        return ResponseEntity.ok(restaurantDto);
+
     }
 
-    @PutMapping("/{RestaurantId}/menu/clear")
-    public ResponseEntity<ResponseWithData<Restaurant>> unlinkRestaurantToMenu(@PathVariable Long RestaurantId) {
+    @PutMapping("/{restaurantId}/menu/clear")
+    public ResponseEntity<ResponseWithData<Restaurant>> unlinkRestaurantToMenu(@PathVariable Long restaurantId) {
         try {
-            var restaurant = restaurantService.unlinkRestaurantToMenu(RestaurantId);
+            var restaurant = restaurantService.unlinkRestaurantToMenu(restaurantId);
             ResponseWithData<Restaurant> response = new ResponseWithData<>("Success", restaurant);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
