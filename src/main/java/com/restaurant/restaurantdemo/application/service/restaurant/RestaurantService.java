@@ -1,43 +1,30 @@
 package com.restaurant.restaurantdemo.application.service.restaurant;
 
 
-import com.restaurant.restaurantdemo.application.service.LoggerService;
+
 import com.restaurant.restaurantdemo.domain.menu.Menu;
 import com.restaurant.restaurantdemo.domain.restaurant.Restaurant;
 import com.restaurant.restaurantdemo.boundary.output.jpa.menu.MenuRepository;
 import com.restaurant.restaurantdemo.boundary.output.jpa.restaurant.RestaurantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RestaurantService {
-
-    private final RestaurantRepository restaurantRepository;
-    private final MenuRepository menuRepository;
-    private final LoggerService logger;
-
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository, LoggerService logger, MenuRepository menuRepository) {
-        this.restaurantRepository = restaurantRepository;
-        this.logger = logger;
-        this.menuRepository = menuRepository;
-    }
+    private final RestaurantRepository restaurantRepository;
+    @Autowired
+    private final MenuRepository menuRepository;
 
 
     public List<Restaurant> getAllRestaurants() {
-        try {
-            return restaurantRepository.findAll();
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while retrieving all restaurants", e.getMessage());
-            throw new RuntimeException("Error while retrieving all restaurants", e);
-        }
-
+        return restaurantRepository.findAll();
     }
 
     public Restaurant getRestaurantById(Long restaurantId) {
@@ -46,81 +33,59 @@ public class RestaurantService {
 
 
     public Restaurant createRestaurant(Restaurant restaurant) {
-        try {
-            if (restaurantRepository.findByName(restaurant.getName()) != null) {
-                throw new IllegalStateException("A restaurant with the name '" + restaurant.getName() + "' already exists.");
-            }
-            return restaurantRepository.save(restaurant);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while creating restaurant", e);
-            throw new RuntimeException("Error while creating  restaurant ," + e.getMessage(), e.getCause());
+
+        if (restaurantRepository.findByName(restaurant.getName()) != null) {
+            throw new IllegalStateException("A restaurant with the name '" + restaurant.getName() + "' already exists.");
         }
+        return restaurantRepository.save(restaurant);
+
     }
 
-    public Restaurant updateRestaurant(Long restaurantId, Restaurant restaurantDetails) {
-        try {
+    public void updateRestaurant(Long restaurantId, Restaurant restaurantDetails) {
 
-            if (restaurantRepository.findByNameAndIdNot(restaurantDetails.getName(), restaurantId) != null) {
-                throw new IllegalStateException("A restaurant with the name '" + restaurantDetails.getName() + "' already exists.");
-            }
-            Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
-                    .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
 
-            existingRestaurant.setName(restaurantDetails.getName());
-            existingRestaurant.setAddress(restaurantDetails.getAddress());
-
-            // Save the updated restaurant
-            return restaurantRepository.save(existingRestaurant);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while updating restaurant", e.getMessage());
-            throw new RuntimeException("Error while updating restaurant", e.getCause());
+        if (restaurantRepository.findByNameAndIdNot(restaurantDetails.getName(), restaurantId) != null) {
+            throw new IllegalStateException("A restaurant with the name '" + restaurantDetails.getName() + "' already exists.");
         }
+        Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
+
+        existingRestaurant.setName(restaurantDetails.getName());
+        existingRestaurant.setAddress(restaurantDetails.getAddress());
+
+        // Save the updated restaurant
+        restaurantRepository.save(existingRestaurant);
+
     }
 
     @Transactional
-    public Restaurant linkRestaurantToMenu(Long restaurantId, Long menuId) {
-        try {
-            Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
-                    .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
+    public void linkRestaurantToMenu(Long restaurantId, Long menuId) {
 
-            Menu menu = menuRepository.findById(menuId)
-                    .orElseThrow(() -> new EntityNotFoundException("Menu not found with ID: " + menuId));
-            existingRestaurant.setMenu(menu);
-            // Save the updated restaurant
-            return restaurantRepository.save(existingRestaurant);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while updating restaurant", e.getMessage());
-            throw new RuntimeException("Error while updating restaurant", e.getCause());
-        }
+        Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
+
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new EntityNotFoundException("Menu not found with ID: " + menuId));
+        existingRestaurant.setMenu(menu);
+        // Save the updated restaurant
+        restaurantRepository.save(existingRestaurant);
+
     }
 
 
     @Transactional
-    public Restaurant unlinkRestaurantToMenu(Long restaurantId) {
-        try {
-            Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
-                    .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
-            existingRestaurant.setMenu(null);
-            // Save the updated restaurant
-            return restaurantRepository.save(existingRestaurant);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while updating restaurant", e.getMessage());
-            throw new RuntimeException("Error while updating restaurant", e.getCause());
-        }
+    public void unlinkRestaurantToMenu(Long restaurantId) {
+
+        Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with ID: " + restaurantId));
+        existingRestaurant.setMenu(null);
+        // Save the updated restaurant
+        restaurantRepository.save(existingRestaurant);
+
     }
 
 
-    public void deleteRestaurant(Long RestaurantId) {
-        try {
-            restaurantRepository.deleteById(RestaurantId);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while deleting restaurant", e.getMessage());
-            throw new RuntimeException("Error while deleting  restaurant", e);
-        }
+    public void deleteRestaurant(Long restaurantId) {
+        restaurantRepository.deleteById(restaurantId);
     }
 }

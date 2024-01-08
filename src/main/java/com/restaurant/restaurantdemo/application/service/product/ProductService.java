@@ -5,6 +5,7 @@ import com.restaurant.restaurantdemo.application.service.LoggerService;
 import com.restaurant.restaurantdemo.domain.prodact.Product;
 import com.restaurant.restaurantdemo.boundary.output.jpa.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,90 +14,58 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
-    private final LoggerService logger;
-
     @Autowired
-    public ProductService(ProductRepository productRepository, LoggerService logger) {
-        this.productRepository = productRepository;
-        this.logger = logger;
-    }
+    private final ProductRepository productRepository;
 
 
     public List<Product> getAllProducts() {
-        try {
-            return productRepository.findAll();
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while retrieving all products", e.getMessage());
-            throw new RuntimeException("Error while retrieving all products", e);
-        }
+
+        return productRepository.findAll();
+
     }
 
     public List<Product> getProductsContainingName(String name) {
-        try {
-            return productRepository.findByNameContaining(name);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while retrieving products containing name", e.getMessage());
-            throw new RuntimeException("Error while retrieving products containing name", e);
-        }
+
+        return productRepository.findByNameContaining(name);
+
     }
 
-    public Optional<Product> getProductByName(String name) {
-        try {
-            return Optional.ofNullable(productRepository.findByName(name));
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while retrieving product by name", e.getMessage());
-            throw new RuntimeException("Error while retrieving product by id", e);
-        }
+    public Product getProductByName(String name) {
+
+        return productRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
     }
 
-    public Optional<Product> getProductById(Long id) {
-        try {
-            return productRepository.findById(id);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while retrieving product by id", e.getMessage());
-            throw new RuntimeException("Error while retrieving product by id", e);
-        }
+    public Product getProductById(Long id) {
+
+        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
     }
 
     public Product createProduct(Product product) {
-        try {
-            return productRepository.save(product);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while creating product", e.getMessage());
-            throw new RuntimeException("Error while creating product", e);
-        }
+
+        return productRepository.save(product);
+
     }
 
     public Product updateProduct(Long id, Product product) {
-        try {
-            var oldProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product Not Found"));
-            oldProduct.setDescription(product.getDescription());
-            oldProduct.setPlu(product.getPlu());
-            oldProduct.setName(product.getName());
-            oldProduct.setPrice(product.getPrice());
-            oldProduct.setImage(product.getImage());
-            return productRepository.save(oldProduct);
-        } catch (Exception e) {
-            logger.error("Error while updating product", e.getMessage());
-            throw new RuntimeException("Error while updating product", e);
-        }
+
+        var oldProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product Not Found"));
+        oldProduct.setDescription(product.getDescription());
+        oldProduct.setPlu(product.getPlu());
+        oldProduct.setName(product.getName());
+        oldProduct.setPrice(product.getPrice());
+        oldProduct.setImage(product.getImage());
+        return productRepository.save(oldProduct);
+
     }
 
     public void deleteProductById(Long id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (Exception e) {
-            // Log the exception
-            logger.error("Error while deleting product by ID", e.getMessage());
-            throw new RuntimeException("Error while deleting product by ID: " + id);
-        }
+
+        productRepository.deleteById(id);
+
     }
 }

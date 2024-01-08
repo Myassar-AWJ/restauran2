@@ -66,47 +66,28 @@ public class RestaurantController {
 
     @PutMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void  updateRestaurant(@PathVariable Long restaurantId, @RequestBody @Valid RestaurantDTO restaurantDto) {
+    public void updateRestaurant(@PathVariable Long restaurantId, @RequestBody @Valid RestaurantDTO restaurantDto) {
         Restaurant restaurant = modelMapper.map(restaurantDto, Restaurant.class);
-        Restaurant updatedrestaurant = restaurantService.updateRestaurant(restaurantId, restaurant);
+        restaurantService.updateRestaurant(restaurantId, restaurant);
     }
 
     @PutMapping("/{restaurantId}/menu/{menuId}")
-    public ResponseEntity<RestaurantDTO> linkRestaurantToMenu(@PathVariable Long restaurantId, @PathVariable Long menuId) {
-
-        var restaurant = restaurantService.linkRestaurantToMenu(restaurantId, menuId);
-        RestaurantDTO restaurantDto = modelMapper.map(restaurant, RestaurantDTO.class);
-        return ResponseEntity.ok(restaurantDto);
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void linkRestaurantToMenu(@PathVariable Long restaurantId, @PathVariable Long menuId) {
+        restaurantService.linkRestaurantToMenu(restaurantId, menuId);
     }
 
     @PutMapping("/{restaurantId}/menu/clear")
-    public ResponseEntity<ResponseWithData<Restaurant>> unlinkRestaurantToMenu(@PathVariable Long restaurantId) {
-        try {
-            var restaurant = restaurantService.unlinkRestaurantToMenu(restaurantId);
-            ResponseWithData<Restaurant> response = new ResponseWithData<>("Success", restaurant);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // Log the exception
-
-            ResponseWithData<Restaurant> errorResponse = new ResponseWithData<>(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unlinkRestaurantToMenu(@PathVariable Long restaurantId) {
+        restaurantService.unlinkRestaurantToMenu(restaurantId);
     }
 
 
-    @DeleteMapping("/{RestaurantId}")
-    public ResponseEntity<ResponseWithData<Void>> deleteRestaurant(@PathVariable Long RestaurantId) {
-        try {
-            restaurantService.deleteRestaurant(RestaurantId);
-            ResponseWithData<Void> response = new ResponseWithData<>("Success");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-
-            ResponseWithData<Void> errorResponse = new ResponseWithData<>(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-
+    @DeleteMapping("/{restaurantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRestaurant(@PathVariable Long restaurantId) {
+            restaurantService.deleteRestaurant(restaurantId);
     }
 
 
