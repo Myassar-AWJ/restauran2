@@ -6,6 +6,7 @@ import com.restaurant.restaurantdemo.domain.menu.Menu;
 import com.restaurant.restaurantdemo.domain.restaurant.Restaurant;
 import com.restaurant.restaurantdemo.boundary.output.jpa.menu.MenuRepository;
 import com.restaurant.restaurantdemo.boundary.output.jpa.restaurant.RestaurantRepository;
+import groovy.util.logging.Slf4j;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +87,9 @@ public class RestaurantService {
 
 
     public void deleteRestaurant(Long restaurantId) {
+        if (!restaurantRepository.existsById(restaurantId)) {
+            throw new EntityNotFoundException("Restaurant with ID " + restaurantId + " not found");
+        }
         restaurantRepository.deleteById(restaurantId);
     }
 }

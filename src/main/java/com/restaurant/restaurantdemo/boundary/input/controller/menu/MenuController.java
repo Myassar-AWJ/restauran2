@@ -7,6 +7,7 @@ import com.restaurant.restaurantdemo.application.service.ResponseWithData;
 import com.restaurant.restaurantdemo.application.service.menu.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/menu")
 @RequiredArgsConstructor
@@ -42,6 +43,8 @@ public class MenuController {
     public MenuDTO getMenuById(@PathVariable Long menuId) {
 
         Menu menu = menuService.getMenuById(menuId);
+        log.info("getMenuById");
+        log.info(menu.toString());
         return modelMapper.map(menu, MenuDTO.class);
 
     }
