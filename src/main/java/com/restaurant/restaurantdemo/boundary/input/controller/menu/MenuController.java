@@ -3,7 +3,6 @@ package com.restaurant.restaurantdemo.boundary.input.controller.menu;
 import com.restaurant.restaurantdemo.application.dto.menu.MenuDTO;
 
 import com.restaurant.restaurantdemo.domain.menu.Menu;
-import com.restaurant.restaurantdemo.application.service.ResponseWithData;
 import com.restaurant.restaurantdemo.application.service.menu.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -69,12 +68,8 @@ public class MenuController {
 
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<ResponseWithData<Void>> deleteMenu(@PathVariable Long MenuId) {
-
+    public  void  deleteMenu(@PathVariable Long MenuId) {
         menuService.deleteMenu(MenuId);
-        ResponseWithData<Void> response = new ResponseWithData<>("Success");
-        return ResponseEntity.ok(response);
-
     }
 
     @PutMapping("/linkItemsToMenu/{menuId}")

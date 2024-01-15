@@ -1,14 +1,12 @@
 package com.restaurant.restaurantdemo.application.service.menu;
 
 
-import com.restaurant.restaurantdemo.application.service.LoggerService;
 import com.restaurant.restaurantdemo.application.service.product.ProductService;
 import com.restaurant.restaurantdemo.domain.menu.Menu;
 import com.restaurant.restaurantdemo.domain.prodact.Product;
 import com.restaurant.restaurantdemo.boundary.output.jpa.menu.MenuRepository;
 
 
-import com.restaurant.restaurantdemo.boundary.output.jpa.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -1,20 +1,14 @@
 package com.restaurant.restaurantdemo.boundary.input.controller.product;
 
 import com.restaurant.restaurantdemo.application.dto.product.ProductDTO;
-import com.restaurant.restaurantdemo.application.dto.restaurant.RestaurantDTO;
 import com.restaurant.restaurantdemo.domain.prodact.Product;
-import com.restaurant.restaurantdemo.application.service.ResponseWithData;
-import com.restaurant.restaurantdemo.application.service.LoggerService;
 import com.restaurant.restaurantdemo.application.service.product.ProductService;
-import com.restaurant.restaurantdemo.domain.restaurant.Restaurant;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

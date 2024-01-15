@@ -1,10 +1,6 @@
 package com.restaurant.restaurantdemo.boundary.input.controller.restaurant;
 
 import com.restaurant.restaurantdemo.application.dto.restaurant.RestaurantDTO;
-import com.restaurant.restaurantdemo.application.service.ResponseWithData;
-import com.restaurant.restaurantdemo.application.service.LoggerService;
-import groovy.util.logging.Slf4j;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 
@@ -13,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.restaurant.restaurantdemo.application.service.restaurant.RestaurantService;
 import org.springframework.http.ResponseEntity;

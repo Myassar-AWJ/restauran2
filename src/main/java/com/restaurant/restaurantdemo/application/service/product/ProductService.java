@@ -1,7 +1,6 @@
 package com.restaurant.restaurantdemo.application.service.product;
 
 
-import com.restaurant.restaurantdemo.application.service.LoggerService;
 import com.restaurant.restaurantdemo.domain.prodact.Product;
 import com.restaurant.restaurantdemo.boundary.output.jpa.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
