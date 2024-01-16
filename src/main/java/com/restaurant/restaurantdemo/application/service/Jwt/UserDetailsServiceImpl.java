@@ -8,9 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.restaurant.restaurantdemo.boundary.output.jpa.user.UserRepository;
+
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl  implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -18,9 +19,9 @@ public class UserDetailsServiceImpl  implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
-        if(user == null){
-             throw new UsernameNotFoundException("could not found user..!!");
+        if (user == null) {
+            throw new UsernameNotFoundException("could not found user..!!");
         }
-        return  new CustomUserDetails(user);;
+        return user;
     }
 }
