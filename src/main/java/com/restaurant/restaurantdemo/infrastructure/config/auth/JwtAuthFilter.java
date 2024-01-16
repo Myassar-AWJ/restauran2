@@ -2,6 +2,7 @@ package com.restaurant.restaurantdemo.infrastructure.config.auth;
 
 
 import com.restaurant.restaurantdemo.application.service.Jwt.JwtService;
+import com.restaurant.restaurantdemo.application.service.Jwt.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
