@@ -33,6 +33,8 @@ public class User implements UserDetails {
     @NotBlank(message = "Email is required")
     @Email
     private String email;
+    @NotBlank(message = "Password is required")
+    private String password;
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Role is required")
     private Role role;
@@ -52,7 +54,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.restaurant.restaurantdemo.application.service.Jwt;
+package com.restaurant.restaurantdemo.application.service.jwt;
 
 import com.restaurant.restaurantdemo.domain.user.User;
 import lombok.RequiredArgsConstructor;
