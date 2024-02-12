@@ -1,6 +1,8 @@
 package com.restaurant.restaurantdemo.boundary.input.controller.product;
 
-import com.restaurant.restaurantdemo.application.dto.product.ProductDTO;
+import com.restaurant.restaurantdemo.application.RestaurantFacade;
+import com.restaurant.restaurantdemo.application.dto.product.ProductDocument;
+import com.restaurant.restaurantdemo.application.service.product.CreateProductCommand;
 import com.restaurant.restaurantdemo.domain.prodact.Product;
 import com.restaurant.restaurantdemo.application.service.product.ProductService;
 import jakarta.validation.Valid;
@@ -22,45 +24,45 @@ public class ProductController {
     @Autowired
     private final ProductService productService;
     @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    private final RestaurantFacade restaurantFacade;
 
 
     @GetMapping
-    public List<ProductDTO> getAllProducts() {
+    public List<ProductDocument> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         return products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .map(product -> modelMapper.map(product, ProductDocument.class))
                 .collect(Collectors.toList());
 
     }
 
     @GetMapping("/products/{productId}")
-    public  ProductDTO getProductBId(@PathVariable Long productId) {
+    public ProductDocument getProductBId(@PathVariable Long productId) {
             Product product = productService.getProductById(productId);
-            return modelMapper.map(product, ProductDTO.class);
+            return modelMapper.map(product, ProductDocument.class);
     }
 
 
     @GetMapping("/products/name/{productName}")
-    public ProductDTO getProductByName(@PathVariable String productName) {
+    public ProductDocument getProductByName(@PathVariable String productName) {
             Product product = productService.getProductByName(productName);
-            return modelMapper.map(product, ProductDTO.class);
+            return modelMapper.map(product, ProductDocument.class);
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public  ResponseEntity<ProductDTO>  createProduct(@RequestBody @Valid ProductDTO productDto) {
-            Product product =modelMapper.map(productDto, Product.class);
-            Product newProduct = productService.createProduct(product);
-            ProductDTO newProductDto = modelMapper.map(newProduct, ProductDTO.class);
-            return ResponseEntity.ok(newProductDto);
+    public Long createProduct(@RequestBody @Valid ProductDocument productDocument) {
+            var command = modelMapper.map(productDocument, CreateProductCommand.class);
+            return restaurantFacade.handle(command);
     }
 
     @PutMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProduct(@PathVariable long productId, @RequestBody @Valid ProductDTO productDto) {
+    public void updateProduct(@PathVariable long productId, @RequestBody @Valid ProductDocument productDocument) {
 
-             Product product =modelMapper.map(productDto, Product.class);
+             Product product =modelMapper.map(productDocument, Product.class);
              Product updatedProduct = productService.updateProduct(productId, product);
 
     }

@@ -22,11 +22,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter  extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtService jwtService;
+    @Autowired // field injection is not recommended, if you have @RequiredArgsConstructor on a class, you can remove @Autowired from all fields
+    private final JwtService jwtService;
 
     @Autowired
-    UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,@NotNull HttpServletResponse response,@NotNull FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");

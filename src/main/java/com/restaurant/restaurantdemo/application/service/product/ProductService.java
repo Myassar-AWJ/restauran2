@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -43,9 +43,10 @@ public class ProductService {
 
     }
 
-    public Product createProduct(Product product) {
-
-        return productRepository.save(product);
+    public Long handle(CreateProductCommand command) {
+        var product = new Product(command.id(), command.name(), command.description(), command.price(), command.plu(), command.image(), new HashSet<>());
+        productRepository.save(product);
+        return command.id();
 
     }
 

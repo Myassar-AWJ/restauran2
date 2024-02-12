@@ -35,12 +35,12 @@ public class MenuService {
     }
 
 
-    public Menu createMenu(Menu menu) {
-
-        if (menuRepository.findByName(menu.getName()) != null) {
-            throw new IllegalStateException("A Menu with the name '" + menu.getName() + "' already exists.");
+    public Long handle(CreateMenuCommand command) {
+        if (menuRepository.findByName(command.name()) != null) {
+            throw new IllegalStateException("A Menu with the name '" + command.name() + "' already exists.");
         }
-        return menuRepository.save(menu);
+        var menu = Menu.of(command.id(), command.name(), command.products());
+        return menuRepository.save(menu).getId();
 
     }
 
@@ -65,7 +65,7 @@ public class MenuService {
 
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new EntityNotFoundException("Menu not found"));
 
-        for (Long id : productsId) {
+        for (Long id : productsId) { // you can use streams
             Product product = productService.getProductById(id);
             menu.getProducts().add(product);
         }
@@ -80,7 +80,7 @@ public class MenuService {
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new EntityNotFoundException("Menu not found with id " + menuId));
 
-        for (Long id : productsId) {
+        for (Long id : productsId) { // you can use streams
             Product product = productService.getProductById(id);
             menu.getProducts().remove(product);
         }

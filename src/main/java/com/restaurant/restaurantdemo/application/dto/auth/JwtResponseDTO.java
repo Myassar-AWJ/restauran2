@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JwtResponseDTO {
+public class JwtResponseDTO { // you can use records https://www.baeldung.com/java-record-keyword
     private String accessToken;
 }

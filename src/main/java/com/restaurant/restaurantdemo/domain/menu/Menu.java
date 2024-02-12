@@ -15,10 +15,13 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Menu {
 
+    public static Menu of(Long id, String name, Set<Product> products) {
+        return new Menu(id, name, products, new HashSet<>());
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,11 +43,11 @@ public class Menu {
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Product> products = new HashSet<>();
+    private Set<Product> products;
 
 
 
     @JsonIgnore
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Restaurant> restaurants = new HashSet<>();
+    private Set<Restaurant> restaurants;
 }

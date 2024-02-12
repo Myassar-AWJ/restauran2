@@ -1,7 +1,7 @@
 package com.restaurant.restaurantdemo.application.dto.restaurant;
 
 
-import com.restaurant.restaurantdemo.application.dto.menu.MenuDTO;
+import com.restaurant.restaurantdemo.application.dto.menu.MenuDocument;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -22,5 +22,5 @@ public class RestaurantDTO {
     @NotBlank(message = "Address is required")
     private String address;
 
-    private MenuDTO menu;
+    private MenuDocument menu;
 }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service // if you use IntelliJ please import our formatter from e.g. customer-api project (/common/Kitopi_Intellij_Formatter.xml) and use auto-formatting on files
 @RequiredArgsConstructor
 public class RestaurantService {
     @Autowired

@@ -1,7 +1,9 @@
 package com.restaurant.restaurantdemo.boundary.input.controller.menu;
 
-import com.restaurant.restaurantdemo.application.dto.menu.MenuDTO;
+import com.restaurant.restaurantdemo.application.RestaurantFacade;
+import com.restaurant.restaurantdemo.application.dto.menu.MenuDocument;
 
+import com.restaurant.restaurantdemo.application.service.menu.CreateMenuCommand;
 import com.restaurant.restaurantdemo.domain.menu.Menu;
 import com.restaurant.restaurantdemo.application.service.menu.MenuService;
 import jakarta.validation.Valid;
@@ -10,13 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+
+import static com.restaurant.restaurantdemo.boundary.input.controller.menu.MenuDocumentFactory.toMenusDocument;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/menu")
@@ -25,43 +30,48 @@ public class MenuController {
     @Autowired
     private final MenuService menuService;
     @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    private final RestaurantFacade restaurantFacade;
 
 
     @GetMapping
-    public List<MenuDTO> getAllMenus() {
+    public List<MenuDocument> getAllMenus() {
 
         List<Menu> menus = menuService.getAllMenus();
+        return toMenusDocument(menus);
+        // we usually create class like MenuDocumentFactory with static methods toMenuDocument and toMenusDocument
         return menus.stream()
-                .map(menu -> modelMapper.map(menu, MenuDTO.class))
+                .map(menu -> modelMapper.map(menu, MenuDocument.class))
                 .collect(Collectors.toList());
 
     }
 
     @GetMapping("/{menuId}")
-    public MenuDTO getMenuById(@PathVariable Long menuId) {
+    public MenuDocument getMenuById(@PathVariable Long menuId) {
 
         Menu menu = menuService.getMenuById(menuId);
+        // log.info("Getting menu: {}", menu);
         log.info("getMenuById");
         log.info(menu.toString());
-        return modelMapper.map(menu, MenuDTO.class);
+        return modelMapper.map(menu, MenuDocument.class);
 
     }
 
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Long> createMenu(@RequestBody @Valid MenuDTO menuDto, BindingResult bindingResult) {
-        Menu menu = modelMapper.map(menuDto, Menu.class);
-        Menu newMenu = menuService.createMenu(menu);
-        return ResponseEntity.ok(newMenu.getId());
+    public Long createMenu(@RequestBody @Valid MenuDocument menuDocument, BindingResult bindingResult) { // not used parameter
+        CreateMenuCommand createMenuCommand = modelMapper.map(menuDocument, CreateMenuCommand.class);
+        return restaurantFacade.handle(createMenuCommand);
+        // no need for ResponseEntity if you use @RestController
 
     }
 
     @PutMapping("/{menuId}")
-    public void updateMenu(@PathVariable Long menuId, @RequestBody @Valid MenuDTO menuDto) {
+    public void updateMenu(@PathVariable Long menuId, @RequestBody @Valid MenuDocument menuDocument) {
 
-        Menu menu = modelMapper.map(menuDto, Menu.class);
+        Menu menu = modelMapper.map(menuDocument, Menu.class);
         Menu newMenu = menuService.updateMEnu(menuId, menu);
 
     }

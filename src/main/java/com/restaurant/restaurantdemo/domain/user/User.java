@@ -40,11 +40,11 @@ public class User implements UserDetails {
     private Role role;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private Instant createdAt;
+    private Instant createdAt; // better to use ZonedDateTime
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private Instant updatedAt; // better to use ZonedDateTime
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

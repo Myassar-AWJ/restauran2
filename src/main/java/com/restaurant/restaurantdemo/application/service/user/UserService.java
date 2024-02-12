@@ -1,4 +1,12 @@
 package com.restaurant.restaurantdemo.application.service.user;
+// user vertical slice organization:
+//  com.restaurant.restaurantdemo.application.user.UserService
+//  com.restaurant.restaurantdemo.application.user.UserDto
+//  com.restaurant.restaurantdemo.application.menu.MenuService
+//  com.restaurant.restaurantdemo.application.menu.MenuDto
+//  com.restaurant.restaurantdemo.application.product.ProductService
+//  com.restaurant.restaurantdemo.application.product.ProductDto
+//  ...
 
 import com.restaurant.restaurantdemo.boundary.output.jpa.user.UserRepository;
 
